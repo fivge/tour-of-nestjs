@@ -43,3 +43,21 @@ Commands:
  update|u [options]                              Update Nest dependencies.
  add [options] <library>                         Adds support for an external library to your project.
 ```
+
+```
+addCat
+deleteCat
+updateCat
+getCat
+getCatList
+```
+
+```
+Cat
+CatRequest
+CatResponse
+```
+
+```
+ResponseBean
+```
