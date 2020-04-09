@@ -4,14 +4,11 @@ import { Observable, of } from 'rxjs';
 
 import { CatRequest } from './cat-request';
 import { Cat } from './cat';
+import { CatsService } from './cats.service';
 
 @Controller('cats')
 export class CatsController {
-  // or
-  //   @Get()
-  //   async getCatList(): Promise<any[]> {
-  //     return [];
-  //   }
+  constructor(private readonly service: CatsService) {}
 
   @Get('5238')
   @HttpCode(207)
@@ -35,16 +32,18 @@ export class CatsController {
   }
 
   @Get()
-  getCatList(): Observable<any[]> {
-    return of([1, 2, 3]);
+  getCatList(): Observable<Cat[]> {
+    return this.service.getCatList();
   }
+  // or
+  //   @Get()
+  //   async getCatList(): Promise<any[]> {
+  //     return [];
+  //   }
 
   @Post()
-  addCat(@Body() params: CatRequest): Cat {
-    const id = '0x01';
-    let _cat: Cat = new Cat();
-    _cat = { ...params, id };
-    return _cat;
+  addCat(@Body() params: CatRequest): Observable<Cat> {
+    return this.service.addCat(params);
   }
 
   // GET {{url}}/cats/12138?age=26
