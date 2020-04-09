@@ -1,6 +1,6 @@
 import { Controller, Get, Post, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
 import { FileInterceptor, AnyFilesInterceptor } from '@nestjs/platform-express';
-
+import * as XlsxPopulate from 'xlsx-populate';
 import { PhotoService } from './photo.service';
 import { Photo } from './photo.entity';
 
@@ -27,6 +27,11 @@ export class PhotoController {
   @UseInterceptors(AnyFilesInterceptor())
   uploadAnyFile(@UploadedFiles() files) {
     console.log(files);
+    XlsxPopulate.fromDataAsync(files[0].buffer).then(function(workbook) {
+      // ...
+      console.log(workbook);
+      return workbook.toFileAsync('./out.xlsx');
+    });
     return {
       code: '0',
       msg: 'success',
