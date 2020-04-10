@@ -1,9 +1,12 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('product_config')
+@Entity('product_price')
 export class ProductConfig {
   @PrimaryGeneratedColumn('uuid')
   id: number;
+  /** 云中心 */
+  @Column()
+  cloudcenter: string;
   /** 产品线编码 */
   @Column()
   pid: string;

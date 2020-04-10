@@ -17,6 +17,12 @@ export class ProductService {
   }
 
   addProductConfig(productConfig: IProductConfig): Promise<InsertResult> {
-    return this.productConfigRepository.insert(productConfig);
+    let res;
+    try {
+      res = this.productConfigRepository.insert(productConfig);
+    } catch (error) {
+      res = error;
+    }
+    return res;
   }
 }
