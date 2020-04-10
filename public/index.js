@@ -1,5 +1,6 @@
-const url = 'http://localhost:3000/photo/upload/any';
+const url = 'http://localhost:3000/product/upload/any';
 const input = document.getElementById('fileinput');
+const button = document.getElementById('fileupload');
 
 const upload = file => {
   // A File object is a special kind of blob.
@@ -9,10 +10,9 @@ const upload = file => {
   // });
 
   const formData = new FormData();
+
   for (const name in file) {
-    console.log('name', name);
     formData.append(name, file[name]);
-    console.log('formData', formData);
   }
 
   fetch(url, { method: 'POST', body: formData })
@@ -21,7 +21,4 @@ const upload = file => {
     .catch(error => console.log(error));
 };
 
-// Event handler executed when a file is selected
-const onSelectFile = () => upload(input.files);
-
-input.addEventListener('change', onSelectFile, false);
+button.onclick = () => upload(input.files);

@@ -1,6 +1,5 @@
-import { Controller, Get, Post, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
-import { FileInterceptor, AnyFilesInterceptor } from '@nestjs/platform-express';
-import * as XlsxPopulate from 'xlsx-populate';
+import { Controller, Get } from '@nestjs/common';
+
 import { PhotoService } from './photo.service';
 import { Photo } from './photo.entity';
 
@@ -11,30 +10,5 @@ export class PhotoController {
   @Get()
   async getPhotoList(): Promise<Photo[]> {
     return this.service.findAll();
-  }
-
-  @Post('upload')
-  @UseInterceptors(FileInterceptor('file')) // FIXME: statusCode: 400 message: "Unexpected field" error: "Bad Request"
-  uploadFile(@UploadedFile() file) {
-    console.log(file);
-    return {
-      code: '0',
-      msg: 'success',
-    };
-  }
-
-  @Post('upload/any')
-  @UseInterceptors(AnyFilesInterceptor())
-  uploadAnyFile(@UploadedFiles() files) {
-    console.log(files);
-    XlsxPopulate.fromDataAsync(files[0].buffer).then(function(workbook) {
-      // ...
-      console.log(workbook);
-      return workbook.toFileAsync('./out.xlsx');
-    });
-    return {
-      code: '0',
-      msg: 'success',
-    };
   }
 }

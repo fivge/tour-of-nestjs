@@ -1,3 +1,5 @@
 @url = http://localhost:3000
 ### photo
 GET {{url}}/photo
+### product-config
+GET {{url}}/product
