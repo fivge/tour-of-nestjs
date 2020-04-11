@@ -27,7 +27,7 @@ export class IProductConfig {
   isstandard: boolean;
   /** 数组转对象 */
   static fromArray(params: (string | number)[]): IProductConfig {
-    let t: IProductConfig = new IProductConfig();
+    const t: IProductConfig = new IProductConfig();
     const arr = [...params];
     t.pid = arr[0] as string;
     t.pcolid = arr[1] as string;
@@ -42,5 +42,22 @@ export class IProductConfig {
     t.yprice = arr[10] as string;
     t.isstandard = (arr[11] as number) === 1 ? false : true;
     return t;
+  }
+  /** 对象转数组 */
+  static toArray(param: IProductConfig): (string | number)[] {
+    return [
+      param.pid,
+      param.pcolid,
+      param.pcolname,
+      param.model,
+      param.ptype,
+      param.rangetype,
+      param.rangesize,
+      param.tprice,
+      param.spec,
+      param.servicedesc,
+      param.yprice,
+      param.isstandard ? 1 : 0,
+    ];
   }
 }

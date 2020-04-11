@@ -75,4 +75,49 @@ export class ProductController {
   getProductConfigListDev(): Promise<ProductConfig[]> {
     return this.service.getProductConfigListDev();
   }
+
+  @Get('download')
+  async downloadProductConfigListDemo() {
+    let productConfigList: ProductConfig[] = [];
+    try {
+      productConfigList = await this.service.getProductConfigListDemo();
+    } catch (error) {
+      return {
+        code: '1',
+        msg: 'sql error',
+        result: error,
+      };
+    }
+    productConfigList = productConfigList.filter(item => item.cloudcenter === 'icp_hainan');
+
+    await XlsxPopulate.fromBlankAsync().then(workbook => {
+      let sheetData: AOA = [];
+      const head = [
+        'pid',
+        'pcolid',
+        'pcolname',
+        'model',
+        'ptype',
+        'rangetype',
+        'rangesize',
+        'tprice',
+        'spec',
+        'servicedesc',
+        'yprice',
+        'isstandard',
+      ];
+      sheetData = [head];
+      for (const item of productConfigList) {
+        sheetData = [...sheetData, IProductConfig.toArray(item)];
+      }
+      const sheet = workbook.sheet(0).name('icp_hainan');
+      sheet.cell('A1').value(sheetData);
+      return workbook.toFileAsync('./out.xlsx');
+    });
+
+    return {
+      code: '0',
+      msg: 'success',
+    };
+  }
 }

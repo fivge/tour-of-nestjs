@@ -7,3 +7,5 @@ GET {{url}}/product
 GET {{url}}/product/demo
 ### product-config dev
 GET {{url}}/product/dev
+### product-config download
+GET {{url}}/product/download
