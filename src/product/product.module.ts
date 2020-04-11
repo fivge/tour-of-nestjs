@@ -6,7 +6,10 @@ import { ProductController } from './product.controller';
 import { ProductConfig } from './product-config.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ProductConfig])],
+  imports: [
+    TypeOrmModule.forFeature([ProductConfig], 'nestDemo'),
+    TypeOrmModule.forFeature([ProductConfig], 'nestDev'),
+  ],
   providers: [ProductService],
   controllers: [ProductController],
 })

@@ -27,7 +27,7 @@ export class ProductController {
   async uploadAnyFile(@UploadedFiles() files) {
     /** 文件名 */
     // const fileName = files[0].originalname;
-    let workbookMap = new Map<string, AOA>();
+    const workbookMap = new Map<string, AOA>();
     let errorFiles = [];
     await XlsxPopulate.fromDataAsync(files[0].buffer).then(workbook => {
       const sheets = workbook.sheets();
@@ -35,11 +35,11 @@ export class ProductController {
         const sheetName = sheet.name();
         const usedRange = sheet.usedRange();
         const sheetData: AOA = usedRange.value();
-        let [head, ...body] = [...sheetData];
+        const [, ...body] = [...sheetData];
         workbookMap.set(sheetName, body);
       }
     });
-    for (let [key, value] of workbookMap) {
+    for (const [key, value] of workbookMap) {
       for (let i = 0; i < value.length; i++) {
         let productConfig = new IProductConfig();
         productConfig = IProductConfig.fromArray(value[i]);
@@ -66,8 +66,13 @@ export class ProductController {
     }
   }
 
-  @Get()
-  getProductConfigList(): Promise<ProductConfig[]> {
-    return this.service.getProductConfigList();
+  @Get('demo')
+  getProductConfigListDemo(): Promise<ProductConfig[]> {
+    return this.service.getProductConfigListDemo();
+  }
+
+  @Get('dev')
+  getProductConfigListDev(): Promise<ProductConfig[]> {
+    return this.service.getProductConfigListDev();
   }
 }

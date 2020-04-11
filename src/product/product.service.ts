@@ -8,18 +8,24 @@ import { IProductConfig } from './product-config.interface';
 @Injectable()
 export class ProductService {
   constructor(
-    @InjectRepository(ProductConfig)
-    private readonly productConfigRepository: Repository<ProductConfig>,
+    @InjectRepository(ProductConfig, 'nestDemo')
+    private readonly productConfigDemoRepository: Repository<ProductConfig>,
+    @InjectRepository(ProductConfig, 'nestDev')
+    private readonly productConfigDevRepository: Repository<ProductConfig>,
   ) {}
 
-  getProductConfigList(): Promise<ProductConfig[]> {
-    return this.productConfigRepository.find();
+  getProductConfigListDemo(): Promise<ProductConfig[]> {
+    return this.productConfigDemoRepository.find();
+  }
+
+  getProductConfigListDev(): Promise<ProductConfig[]> {
+    return this.productConfigDevRepository.find();
   }
 
   addProductConfig(productConfig: IProductConfig): Promise<InsertResult> {
     let res;
     try {
-      res = this.productConfigRepository.insert(productConfig);
+      res = this.productConfigDevRepository.insert(productConfig);
     } catch (error) {
       res = error;
     }

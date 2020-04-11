@@ -3,3 +3,7 @@
 GET {{url}}/photo
 ### product-config
 GET {{url}}/product
+### product-config demo
+GET {{url}}/product/demo
+### product-config dev
+GET {{url}}/product/dev
