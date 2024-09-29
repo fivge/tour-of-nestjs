@@ -4,6 +4,14 @@
 
 - [NestJS](https://docs.nestjs.com/)
 
+## config
+
+### swc
+
+### fastify
+
+https://docs.nestjs.com/techniques/performance
+
 ## Ecology
 
 ### Data
