@@ -1,0 +1,94 @@
+@url = http://localhost:5002
+
+
+### cats
+GET {{url}}/cats
+###
+GET {{url}}/cats/observable
+###
+GET {{url}}/cats?id=y2z8wz
+###
+GET {{url}}/cats?id=y2z8wz&foo=bar
+###
+GET {{url}}/cats/showparams?id=y2z8wz&foo=bar
+
+### 301
+GET {{url}}/cats/docs
+
+### fastify
+GET {{url}}/cats/fastify
+### 
+GET {{url}}/cats/fastify2
+
+### cat
+GET {{url}}/cats/y2z8wz
+###
+GET {{url}}/cats/fooo
+### use id from list
+GET {{url}}/cats/Kw4KvD
+### 
+GET {{url}}/cats/foooo
+
+### add
+POST {{url}}/cats
+Content-Type: application/json
+
+{
+    "id": 52788,
+    "age": 19,
+    "foo": "bar"
+}
+
+### 
+POST {{url}}/cats
+Content-Type: application/json
+
+{
+    "id": 52788,
+    "age": 19,
+    "foo": "bar"
+}
+### 
+POST {{url}}/cats/validation
+Content-Type: application/json
+
+{
+    "id": 52788,
+    "age": 19,
+    "foo": "bar",
+    "breed": "LIHUA"
+}
+
+### 
+POST {{url}}/cats/validation
+Content-Type: application/json
+
+{
+    "id": 52788,
+    "age": 19,
+    "foo": "bar"
+}
+
+
+
+
+### update
+PUT {{url}}/cats/12138
+Content-Type: application/json
+
+{
+    "id": 52788,
+    "age": 37
+}
+
+### delete
+DELETE {{url}}/cats/5238
+
+
+### all
+GET {{url}}/cats/fooo/method
+### 
+POST {{url}}/cats/fooo/method
+
+###
+GET {{url}}/cats/foobf
