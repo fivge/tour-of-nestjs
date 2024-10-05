@@ -50,6 +50,20 @@ https://developer.aliyun.com/article/944026
 
 目录结构 命名
 
+#### 响应
+
+https://restfulapi.cn/restful-api-response
+
+HTTP 状态码 + 业务码
+
+```json
+{
+  "code": 0,
+  "message": "",
+  "data": {}
+}
+```
+
 ## dev
 
 ### RxJS/Promise
@@ -93,6 +107,22 @@ dd
 ### 错误处理
 
 https://docs.nestjs.com/exception-filters
+
+```ts
+      throw new HttpException(
+        { code: 0, message: "cat not found" },
+        HttpStatus.FORBIDDEN,
+        { cause: error },
+      );
+```
+
+
+
+### middlewares
+
+- logger
+- helmet
+- cors
 
 ### orm
 

@@ -16,6 +16,8 @@ import {
   All,
   Header,
   Res,
+  HttpException,
+  HttpStatus,
 } from "@nestjs/common";
 
 import { Observable, of } from "rxjs";
@@ -24,6 +26,7 @@ import { FastifyReply } from "fastify";
 import { Cat, CatRequest } from "./cat";
 import { CatsService } from "./cats.service";
 import { CreateCatDto } from "./dto/create-cat.dto";
+import { ErrorBean } from "src/common/error/error.bean";
 
 @Controller("cats")
 export class CatsController {
@@ -116,13 +119,38 @@ export class CatsController {
       const cat = await this.service.getCat(id);
       return cat;
     } catch (error) {
-      // TODO set http code
-      return { statusCode: 404 };
+      // , @Res({ passthrough: true }) res: FastifyReply
+      // res.code(404);
+      // return { code: 0, message: "cat not found" };
+
+      // throw new HttpException("cat not found", HttpStatus.NOT_FOUND);
+
+      // throw new HttpException(
+      //   { code: 0, message: "cat not found" },
+      //   HttpStatus.NOT_FOUND,
+      //   { cause: error },
+      // );
+
+      throw new ErrorBean(
+        HttpStatus.NOT_FOUND,
+        { code: 0, message: "cat not found" },
+        error,
+      );
     }
   }
 
+  @Get("unhandlecat/throw")
+  async getCatUnhandle() {
+    throw new Error("unhandlecat");
+  }
+
+  @Get("unhandlecat/reject")
+  async getCatUnhandleReject() {
+    return Promise.reject("unhandlecat");
+  }
+
   // 顺序不重要 :id 不影响该函数
-  @Get("foooo")
+  @Get("lastid")
   async getCatsFooo() {
     return "foooo";
   }

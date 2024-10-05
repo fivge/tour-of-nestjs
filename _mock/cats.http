@@ -1,6 +1,5 @@
 @url = http://localhost:5002
 
-
 ### cats
 GET {{url}}/cats
 ###
@@ -12,22 +11,31 @@ GET {{url}}/cats?id=y2z8wz&foo=bar
 ###
 GET {{url}}/cats/showparams?id=y2z8wz&foo=bar
 
+
 ### 301
 GET {{url}}/cats/docs
+
 
 ### fastify
 GET {{url}}/cats/fastify
 ### 
 GET {{url}}/cats/fastify2
 
+
 ### cat
-GET {{url}}/cats/y2z8wz
-###
-GET {{url}}/cats/fooo
 ### use id from list
-GET {{url}}/cats/Kw4KvD
+GET {{url}}/cats/y2z88w
+### special
+GET {{url}}/cats/y2z8wz
 ### 
-GET {{url}}/cats/foooo
+GET {{url}}/cats/lastid
+### 404
+GET {{url}}/cats/404cat
+### 
+GET {{url}}/cats/unhandlecat/throw
+### 
+GET {{url}}/cats/unhandlecat/reject
+
 
 ### add
 POST {{url}}/cats
@@ -38,7 +46,6 @@ Content-Type: application/json
     "age": 19,
     "foo": "bar"
 }
-
 ### 
 POST {{url}}/cats
 Content-Type: application/json

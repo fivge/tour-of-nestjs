@@ -60,15 +60,13 @@ export class CatsService {
   getCat(id): Promise<Cat> {
     let newCat = this.cats.find((cat) => cat.id === this.decodeId(id));
     if (!newCat) {
-      return Promise.reject();
+      return Promise.reject("no cat found in service");
     }
-    console.log("", newCat, id);
     newCat = { ...newCat, id: this.encodeId(newCat.id as number) };
     return Promise.resolve(newCat);
   }
 
   addCat(cat: CatRequest) {
-    console.log("****** cat", cat);
     const id = this.cats.length + 1;
     let _cat: Cat;
     const uid = this.hashids.encode(id);
