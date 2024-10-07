@@ -92,31 +92,47 @@ https://docs.nestjs.com/controllers#library-specific-approach
 
 https://docs.nestjs.com/techniques/performance
 
-### validation
+### Pipes & validation
 
-https://docs.nestjs.com/techniques/validation
+#### Schema based validation
+
+`zod` https://github.com/colinhacks/zod
+
+> TypeScript-first schema validation with static type inference
+
+```jsonc
+{
+  "compilerOptions": {
+    // ...
+    // "strict": true,
+    "strictNullChecks": true,
+  },
+}
+```
+
+#### Class validator
 
 class-validator class-transformer
 
 我们的ValidationPipe可以过滤掉方法处理程序不应接收的属性。在这种情况下，我们可以将可接受的属性列入白名单，并且任何未包含在白名单中的属性都会自动从结果对象中删除。在CreateCatDto示例中，我们的白名单是name 、 age和breed属性。在这里了解更多信息。
 
-```
-dd
-```
+#### validation
+
+https://docs.nestjs.com/techniques/validation
 
 ### 错误处理
 
 https://docs.nestjs.com/exception-filters
 
 ```ts
-      throw new HttpException(
-        { code: 0, message: "cat not found" },
-        HttpStatus.FORBIDDEN,
-        { cause: error },
-      );
+throw new HttpException(
+  { code: 0, message: "cat not found" },
+  HttpStatus.FORBIDDEN,
+  { cause: error },
+);
 ```
 
-
+TODO **pipe 不走filter**
 
 ### middlewares
 

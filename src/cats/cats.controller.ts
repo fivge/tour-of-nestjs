@@ -18,15 +18,22 @@ import {
   Res,
   HttpException,
   HttpStatus,
+  ParseIntPipe,
+  UsePipes,
+  BadRequestException,
 } from "@nestjs/common";
 
 import { Observable, of } from "rxjs";
 import { FastifyReply } from "fastify";
 
-import { Cat, CatRequest } from "./cat";
+import { Cat, CreateCatDto, CreateCatDto2, createCatSchema } from "./cat";
 import { CatsService } from "./cats.service";
-import { CreateCatDto } from "./dto/create-cat.dto";
 import { ErrorBean } from "src/common/error/error.bean";
+import {
+  ClassValidationPipe,
+  ValidationPipe,
+  ZodValidationPipe,
+} from "./pipe/validation.pipe";
 
 @Controller("cats")
 export class CatsController {
@@ -94,14 +101,6 @@ export class CatsController {
     return { list };
   }
 
-  @Get("y2z8wz")
-  @HttpCode(207)
-  @Header("Custom-Header", "tom")
-  async getCatsTom() {
-    const cat = await this.service.getCat("y2z8wz");
-    return { ...cat, special: true };
-  }
-
   @Get("docs")
   @Redirect("http://localhost:5002/cats", 301)
   getDocs(/**@Query('version') version*/) {
@@ -124,6 +123,8 @@ export class CatsController {
       // return { code: 0, message: "cat not found" };
 
       // throw new HttpException("cat not found", HttpStatus.NOT_FOUND);
+      // TODO HttpExceptionFilter不起作用
+      // throw new BadRequestException("cat not found");
 
       // throw new HttpException(
       //   { code: 0, message: "cat not found" },
@@ -131,6 +132,23 @@ export class CatsController {
       //   { cause: error },
       // );
 
+      throw new ErrorBean(
+        HttpStatus.NOT_FOUND,
+        { code: 0, message: "cat not found" },
+        error,
+      );
+    }
+  }
+
+  @Get("uid/:uid")
+  // async getCatByUid(@Param("uid", ParseIntPipe) uid) {
+  async getCatByUid(@Param("uid", new ParseIntPipe({})) uid) {
+    try {
+      // ParseIntPipeOptions
+      console.log("controller", uid, typeof uid);
+      const cat = await this.service.getCatByUid(uid);
+      return cat;
+    } catch (error) {
       throw new ErrorBean(
         HttpStatus.NOT_FOUND,
         { code: 0, message: "cat not found" },
@@ -150,25 +168,36 @@ export class CatsController {
   }
 
   // 顺序不重要 :id 不影响该函数
-  @Get("lastid")
-  async getCatsFooo() {
-    return "foooo";
+  @Get("y2z8wz")
+  @HttpCode(207)
+  @Header("Custom-Header", "tom")
+  async getCatsTom() {
+    const cat = await this.service.getCat("y2z8wz");
+    return { ...cat, special: true };
   }
 
   @Post()
-  addCat(@Body() params: CatRequest) {
+  addCat(@Body() params: CreateCatDto) {
     return this.service.addCat(params);
   }
 
-  @Post("validation")
+  @Post("validation1")
+  @UsePipes(new ZodValidationPipe(createCatSchema))
   addCatWithValidation(@Body() params: CreateCatDto) {
+    console.log("params", params);
+    return this.service.addCat(params);
+  }
+
+  @Post("validation2")
+  addCatWithValidation2(@Body(ClassValidationPipe) params: CreateCatDto2) {
+    // addCatWithValidation2(@Body(new ClassValidationPipe()) params: CreateCatDto2) {
+    console.log("params", params);
     return this.service.addCat(params);
   }
 
   @Put(":id")
-  updateCat(@Param("id") id, @Body() params: any) {
-    params.id = id;
-    return params;
+  updateCat(@Param("id") id, @Body() params: CreateCatDto) {
+    return { ...params, id };
   }
 
   @Delete(":id")

@@ -4,77 +4,100 @@ import Hashids from "hashids";
 import Mock from "@0x64.in/mockjs";
 import uniqBy from "lodash/uniqBy";
 
-import { Cat, CatRequest } from "./cat";
+import { Cat, CatDO, CreateCatDto } from "./cat";
 import { ConfigService } from "@nestjs/config";
 
-const defaultCats = uniqBy(
+const defaultCats: Omit<CatDO, "id" | "breed" | "valid">[] = uniqBy(
   [
     ...new Array(Mock.mock("@natural(3, 5)")).fill(null).map((_) => ({
-      id: Mock.mock("@natural(0, 99)"),
+      uid: Mock.mock("@natural(0, 99)"),
       name: Mock.mock("@first"),
       age: Mock.mock("@natural(1, 20)"),
     })),
-    { id: 1, name: "Tom", age: 2 },
+    { uid: 1, name: "Tom", age: 2 },
   ],
-  "id",
+  "uid",
 );
 
 @Injectable()
 export class CatsService {
-  private cats: Cat[] = defaultCats;
+  private cats: CatDO[];
   private hashids: Hashids;
+
+  private encodeId = (id: number) => this.hashids.encode(id);
+
+  private decodeId = (id: string): number =>
+    this.hashids.decode(id)[0] as number;
 
   constructor(private readonly configService: ConfigService) {
     const salt = this.configService.get<string>("hashsalt.cats");
     this.hashids = new Hashids(salt, 6);
+
+    this.cats = defaultCats.map((i) => ({
+      ...i,
+      id: this.encodeId(i.uid),
+      valid: true,
+    }));
   }
 
-  private encodeId = (id: number) => this.hashids.encode(id);
+  private getCatByDo = (catDO: CatDO): Cat => ({
+    id: catDO.id,
+    name: catDO.name,
+    age: catDO.age,
+    breed: catDO.breed,
+  });
 
-  private decodeId = (id: string) => this.hashids.decode(id)[0];
-
-  getCatList(request?): Promise<Cat[]> {
-    let newCatList = this.cats;
-    // TODO validation
-    if (request && request.id) {
-      newCatList = newCatList.filter(
-        (cat) => cat.id === this.decodeId(request.id),
-      );
+  getCatList(query?): Promise<Cat[]> {
+    let catListDO = this.cats;
+    if (query && query.id) {
+      catListDO = catListDO.filter((cat) => cat.id === query.id);
     }
-    newCatList = newCatList.map((i) => ({
-      ...i,
-      id: this.encodeId(i.id as number),
+
+    const catList = catListDO.map((i) => ({
+      ...this.getCatByDo(i),
+      uid: query._dev_ ? i.uid : undefined,
     }));
-    return Promise.resolve(newCatList);
+    return Promise.resolve(catList);
   }
 
   getCatListObservable(): Observable<Cat[]> {
-    const catList = this.cats.map((i) => ({
-      ...i,
-      id: this.encodeId(i.id as number),
-    }));
+    const catList = this.cats.map((i) => this.getCatByDo(i));
 
     return of(catList);
   }
 
-  getCat(id): Promise<Cat> {
-    let newCat = this.cats.find((cat) => cat.id === this.decodeId(id));
-    if (!newCat) {
+  getCat(id: string): Promise<Cat> {
+    let catDO = this.cats.find((cat) => cat.id === id);
+    if (!catDO) {
       return Promise.reject("no cat found in service");
     }
-    newCat = { ...newCat, id: this.encodeId(newCat.id as number) };
+    const newCat = this.getCatByDo(catDO);
     return Promise.resolve(newCat);
   }
 
-  addCat(cat: CatRequest) {
-    const id = this.cats.length + 1;
-    let _cat: Cat;
-    const uid = this.hashids.encode(id);
-    _cat = { ...cat, id };
-    this.cats.push(_cat);
-    return {
+  getCatByUid(uid: number): Promise<Cat> {
+    console.log("service", uid, typeof uid);
+    let catDO = this.cats.find((cat) => cat.uid === uid);
+    if (!catDO) {
+      return Promise.reject("no cat found in service");
+    }
+    const newCat = this.getCatByDo(catDO);
+    return Promise.resolve(newCat);
+  }
+
+  addCat(cat: CreateCatDto) {
+    const uid = Math.max(...this.cats.map((i) => i.uid)) + 1;
+    // TODO 此处转化可以考虑是否能使用Pipe处理
+    const id = this.hashids.encode(uid);
+    const newCatDO: CatDO = {
+      ...cat,
+      id,
       uid,
-      params: cat,
+      valid: true,
     };
+
+    this.cats = [...this.cats, newCatDO];
+
+    return this.getCatByDo(newCatDO);
   }
 }

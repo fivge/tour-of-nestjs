@@ -24,11 +24,9 @@ GET {{url}}/cats/fastify2
 
 ### cat
 ### use id from list
-GET {{url}}/cats/y2z88w
+GET {{url}}/cats/XXXXX
 ### special
 GET {{url}}/cats/y2z8wz
-### 
-GET {{url}}/cats/lastid
 ### 404
 GET {{url}}/cats/404cat
 ### 
@@ -36,6 +34,12 @@ GET {{url}}/cats/unhandlecat/throw
 ### 
 GET {{url}}/cats/unhandlecat/reject
 
+### cats
+GET {{url}}/cats?_dev_=1
+### 
+GET {{url}}/cats/uid/80
+### 
+GET {{url}}/cats/uid/notnumb
 
 ### add
 POST {{url}}/cats
@@ -56,26 +60,43 @@ Content-Type: application/json
     "foo": "bar"
 }
 ### 
-POST {{url}}/cats/validation
+POST {{url}}/cats/validation1
 Content-Type: application/json
 
 {
-    "id": 52788,
+    "name": "fooo",
     "age": 19,
-    "foo": "bar",
-    "breed": "LIHUA"
-}
-
-### 
-POST {{url}}/cats/validation
-Content-Type: application/json
-
-{
-    "id": 52788,
-    "age": 19,
+    "breed": "LIHUA",
     "foo": "bar"
 }
 
+### 
+POST {{url}}/cats/validation1
+Content-Type: application/json
+
+{
+    "age": 19,
+    "foo": "bar"
+}
+### 
+POST {{url}}/cats/validation2
+Content-Type: application/json
+
+{
+    "name": "fooo",
+    "age": 19,
+    "breed": "LIHUA",
+    "foo": "bar"
+}
+
+### 
+POST {{url}}/cats/validation2
+Content-Type: application/json
+
+{
+    "age": 19,
+    "foo": "bar"
+}
 
 
 
