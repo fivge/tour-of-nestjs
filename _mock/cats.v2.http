@@ -36,3 +36,9 @@ GET {{url}}/cats/guard/role3
 Authorization: bearer user-token
 ### role for user
 GET {{url}}/cats/guard/role3
+
+
+########### interceptor
+
+### 
+GET {{url}}/cats/interceptor/demo1

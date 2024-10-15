@@ -24,6 +24,7 @@ import {
   UsePipes,
   BadRequestException,
   UseGuards,
+  UseInterceptors,
 } from "@nestjs/common";
 
 import { Observable, of } from "rxjs";
@@ -40,9 +41,12 @@ import {
 import { AuthGuard } from "./shared/auth.guard";
 import { RolesGuard } from "./shared/roles.guard";
 import { Roles } from "./shared/roles.decorator";
+import { LoggingInterceptor } from "src/common/interceptor/logging.interceptor";
+import { TransformInterceptor } from "src/common/interceptor/transform.interceptor";
 
 @Controller("cats")
 @UseGuards(RolesGuard)
+@UseInterceptors(LoggingInterceptor)
 export class CatsControllerV2 {
   constructor(private readonly service: CatsService) {}
 
@@ -72,5 +76,11 @@ export class CatsControllerV2 {
   @Roles(["user"])
   getRoleData3() {
     return "user data";
+  }
+
+  @Get("interceptor/demo1")
+  @UseInterceptors(TransformInterceptor)
+  getInterceptorData() {
+    return "some data";
   }
 }
