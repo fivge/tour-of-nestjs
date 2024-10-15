@@ -92,6 +92,34 @@ https://docs.nestjs.com/controllers#library-specific-approach
 
 https://docs.nestjs.com/techniques/performance
 
+###
+
+> TODO exception-filters, pipes, Guards
+
+使用场景
+
+代码实现
+
+注入范围
+
+执行顺序/优先级
+
+错误处理
+
+### 错误处理
+
+https://docs.nestjs.com/exception-filters
+
+```ts
+throw new HttpException(
+  { code: 0, message: "cat not found" },
+  HttpStatus.FORBIDDEN,
+  { cause: error },
+);
+```
+
+TODO **pipe 不走filter**
+
 ### Pipes & validation
 
 #### Schema based validation
@@ -120,25 +148,25 @@ class-validator class-transformer
 
 https://docs.nestjs.com/techniques/validation
 
-### 错误处理
-
-https://docs.nestjs.com/exception-filters
-
-```ts
-throw new HttpException(
-  { code: 0, message: "cat not found" },
-  HttpStatus.FORBIDDEN,
-  { cause: error },
-);
-```
-
-TODO **pipe 不走filter**
-
 ### middlewares
 
 - logger
 - helmet
 - cors
+
+### Guards 守卫
+
+permissions, roles, ACLs
+
+authorization
+
+范围
+
+controller-scoped, method-scoped, or global-scoped 控制器、方法、全局
+
+`@UseGuards()` `app.useGlobalGuards()`
+
+守卫抛出的任何异常都将由异常层（全局异常过滤器和应用于当前上下文的任何异常过滤器）处理。
 
 ### orm
 

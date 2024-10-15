@@ -1,0 +1,38 @@
+
+
+@url = http://localhost:5002
+
+### cats
+GET {{url}}/cats
+
+############# auth
+
+###
+GET {{url}}/cats/guard/auth1
+###
+GET {{url}}/cats/guard/auth2
+###
+GET {{url}}/cats/guard/auth2
+Authorization: bearer some-token
+
+############# role
+
+
+### no role
+GET {{url}}/cats/guard/role
+
+### role for admin
+GET {{url}}/cats/guard/role2
+Authorization: bearer admin-token
+### role for admin
+GET {{url}}/cats/guard/role2
+Authorization: bearer user-token
+
+### role for user
+GET {{url}}/cats/guard/role3
+Authorization: bearer admin-token
+### role for user
+GET {{url}}/cats/guard/role3
+Authorization: bearer user-token
+### role for user
+GET {{url}}/cats/guard/role3
